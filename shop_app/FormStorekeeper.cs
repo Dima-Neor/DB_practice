@@ -13,6 +13,7 @@ namespace shop_app
     {
         private string userName;
         private Receipt receipt = new Receipt();
+        private bool chose = true;
 
         OleDbConnection connect;
         public FormStorekeeper(string name)
@@ -35,7 +36,7 @@ namespace shop_app
 
         private void showStor()
         {
-            dataGridView1.SelectionChanged -= this.dataGridView1_SelectionChanged;
+            chose = false;
 
             OleDbCommand com = new OleDbCommand();
             com.CommandText = "SELECT Товар.Название, Товар.Категория, Изготовитель.Название AS Изготовитель, Изготовитель.Страна , Товар.Цена_закупки, Товар.Цена_продажи, Склад.Количество FROM Склад, Товар, Изготовитель WHERE Склад.Id_товар = Товар.Id_товар AND Товар.Id_изготовитель =  Изготовитель.Id_изготовитель";
@@ -63,7 +64,7 @@ namespace shop_app
             dataGridView1.Columns[6].Visible = false;
             dataGridView1.Columns[7].Visible = false;
 
-            dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
+            chose = true;
         }
         void showCB()
         {
@@ -93,7 +94,7 @@ namespace shop_app
         {
             int i = dataGridView1.CurrentRow.Index;
             
-            if (dataGridView1.CurrentRow != null)
+            if (dataGridView1.CurrentRow != null && chose)
             {
                 
                 receipt.set(Convert.ToInt32(dataGridView1[7, i].Value), userName, Convert.ToDateTime(dataGridView1[2, i].Value), Convert.ToInt32(dataGridView1[6, i].Value), Convert.ToInt32(dataGridView1[3, i].Value));
